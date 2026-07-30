@@ -236,6 +236,9 @@ textarea { resize: vertical; }
 .seat[draggable="true"]:active {
   cursor: grabbing;
 }
+.seat.dragging {
+  opacity: 0.4;
+}
 .suit {
   font-size: .78rem;
   font-weight: 800;
