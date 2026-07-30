@@ -239,7 +239,11 @@ textarea { resize: vertical; }
 .seat.dragging {
   opacity: 0.4;
 }
-
+.seat {
+    position: relative;
+    transition: outline-color 0.15s ease,
+                background-color 0.15s ease;
+}
 .seat.drag-over {
   outline: 3px dashed #2563eb;
   outline-offset: -3px;
