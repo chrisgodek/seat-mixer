@@ -23,8 +23,6 @@ const state = {
   savedCharts: []
 };
 
-let draggedSeat = null;
-
 const el = id => document.getElementById(id);
 
 /* --------------------------------------------------
@@ -508,81 +506,48 @@ function renderChart() {
         seat.dataset.tableIndex = i;
         seat.dataset.seatIndex = seatIndex;
       
-       seat.addEventListener("dragstart", event => {
-  draggedSeat = {
-    tableIndex: i,
-    seatIndex
-  };
-
-  event.dataTransfer.effectAllowed = "move";
-  seat.classList.add("dragging");
-});
-
-seat.addEventListener("dragend", () => {
-  draggedSeat = null;
-  seat.classList.remove("dragging");
-
-        document
-  .querySelectorAll(".drag-over")
-  .forEach(s => s.classList.remove("drag-over"));
+        seat.addEventListener("dragstart", (event) => {
+          event.dataTransfer.setData(
+            "text/plain",
+            JSON.stringify({
+              tableIndex: i,
+              seatIndex: seatIndex
+            })
+          );
+      
+          seat.classList.add("dragging");
+        });
+      
+        seat.addEventListener("dragend", () => {
+          seat.classList.remove("dragging");
+        });
       }
-});
 
       seat.addEventListener("dragover", (event) => {
-//
-      seat.addEventListener("dragover", event => {
   event.preventDefault();
-  seat.classList.add("drag-over");
-});
-
-seat.addEventListener("dragleave", () => {
-  seat.classList.remove("drag-over");
-});
-          });//
-                  
-            event.preventDefault();
 });
 //move seats
-seat.addEventListener("drop", event => {
-  seat.classList.remove("drag-over");
+seat.addEventListener("drop", (event) => {
   event.preventDefault();
 
-  if (!draggedSeat) {
-    return;
-  }
-
-  const sourceTableIndex =
-    draggedSeat.tableIndex;
-
-  const sourceSeatIndex =
-    draggedSeat.seatIndex;
-
-  // Do nothing when dropped onto the original seat.
-  if (
-    sourceTableIndex === i &&
-    sourceSeatIndex === seatIndex
-  ) {
-    return;
-  }
+  const source = JSON.parse(
+    event.dataTransfer.getData("text/plain")
+  );
 
   const sourceStudent =
-    state.groups[sourceTableIndex][sourceSeatIndex];
+    state.groups[source.tableIndex][source.seatIndex];
 
   const targetStudent =
     state.groups[i][seatIndex];
 
-  state.groups[sourceTableIndex][sourceSeatIndex] =
+  state.groups[source.tableIndex][source.seatIndex] =
     targetStudent;
 
   state.groups[i][seatIndex] =
     sourceStudent;
 
-  draggedSeat = null;
-
   renderChart();
   persist();
-
-  setStatus("Students moved.");
 }); //safsd
       
       const suitLabel =
