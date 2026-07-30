@@ -283,13 +283,11 @@ textarea {
 .suit-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: .25rem;
+  gap: .4rem;
 }
 
-/* ---------- Seats ---------- */
-
 .seat {
-  min-height: 96px;
+  min-height: 88px;
   display: grid;
   align-content: center;
   justify-items: center;
@@ -301,17 +299,9 @@ textarea {
   text-align: center;
   position: relative;
   transition:
-    transform .15s ease,
-    box-shadow .15s ease,
     background-color .15s ease,
-    border-color .15s ease;
-}
-
-.seat::after {
-  content: "";
-  position: absolute;
-  inset: -8px;
-  pointer-events: none;
+    border-color .15s ease,
+    box-shadow .15s ease;
 }
 
 .seat[draggable="true"] {
@@ -324,15 +314,13 @@ textarea {
 }
 
 .seat.dragging {
-  opacity: .45;
+  opacity: .4;
 }
 
 .seat.drag-over {
-  transform: scale(1.04);
-  border: 2px solid #2563eb;
+  border: 3px dashed #2563eb;
   background: #eaf3ff;
-  box-shadow: 0 6px 16px rgba(37, 99, 235, .25);
-  z-index: 2;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .18);
 }
 
 .suit,
