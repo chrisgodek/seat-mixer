@@ -150,10 +150,22 @@ function shuffleSeats() {
   const columns = clamp(Number(el("columns").value), 1, 8);
   const tableCount = rows * columns;
   const capacity = tableCount * 4;
+  const studentCount = state.students.length;
 
-  if (state.students.length > capacity) {
+  if (studentCount > capacity) {
     setStatus(
       `This room holds ${capacity} students. Add more table groups.`
+    );
+    return;
+  }
+
+  /*
+   * Rosters of 1, 2, or 5 cannot be divided into
+   * occupied tables containing only 3 or 4 students.
+   */
+  if (studentCount < 3 || studentCount === 5) {
+    setStatus(
+      "This roster size cannot be divided into tables of at least three students."
     );
     return;
   }
@@ -167,19 +179,113 @@ function shuffleSeats() {
   );
 
   /*
- * Determine how many tables are needed.
- * Each occupied table should contain either 3 or 4 students.
- */
-const occupiedTableCount = Math.ceil(state.students.length / 4);
+   * Determine the fewest tables needed when each table
+   * may contain no more than four students.
+   */
+  const occupiedTableCount = Math.ceil(studentCount / 4);
 
-if (
-  state.students.length < 3 ||
-  state.students.length === 5
-) {
-  setStatus(
-    "This roster size cannot be divided into tables of at least three students."
+  /*
+   * Start with four students at every occupied table.
+   * Change tables at the back into groups of three
+   * until the total matches the roster.
+   *
+   * Examples:
+   * 14 students → 4, 4, 3, 3
+   * 15 students → 4, 4, 4, 3
+   * 16 students → 4, 4, 4, 4
+   */
+  const tableSizes = Array(occupiedTableCount).fill(4);
+  let seatsToRemove = occupiedTableCount * 4 - studentCount;
+
+  for (
+    let tableIndex = occupiedTableCount - 1;
+    tableIndex >= 0 && seatsToRemove > 0;
+    tableIndex--
+  ) {
+    tableSizes[tableIndex] = 3;
+    seatsToRemove--;
+  }
+
+  /*
+   * Create every table in the classroom.
+   * Tables after the occupied tables remain fully empty.
+   */
+  state.groups = Array.from(
+    { length: tableCount },
+    () => Array(4).fill(null)
   );
-  return;
+
+  /*
+   * Build the usable seat locations.
+   * Full tables use all four suits.
+   * Groups of three leave one randomly selected suit empty.
+   */
+  const availableSeats = [];
+
+  tableSizes.forEach((tableSize, tableIndex) => {
+    const seatIndexes = shuffle([0, 1, 2, 3]).slice(0, tableSize);
+
+    seatIndexes.forEach(seatIndex => {
+      availableSeats.push({
+        tableIndex,
+        seatIndex
+      });
+    });
+  });
+
+  /*
+   * Front-priority students may sit at any occupied seat
+   * among the tables in the first classroom row.
+   */
+  const frontRowSeats = shuffle(
+    availableSeats.filter(location =>
+      location.tableIndex < columns
+    )
+  );
+
+  if (frontStudents.length > frontRowSeats.length) {
+    setStatus(
+      `There are ${frontStudents.length} front-seat students, but only ` +
+      `${frontRowSeats.length} occupied seats in the front row.`
+    );
+    return;
+  }
+
+  /*
+   * Assign front-priority students first.
+   */
+  frontStudents.forEach((student, index) => {
+    const location = frontRowSeats[index];
+
+    state.groups[location.tableIndex][location.seatIndex] = student;
+  });
+
+  /*
+   * Collect all remaining usable seats and randomly
+   * place the other students into them.
+   */
+  const remainingSeats = shuffle(
+    availableSeats.filter(location =>
+      !state.groups[location.tableIndex][location.seatIndex]
+    )
+  );
+
+  otherStudents.forEach((student, index) => {
+    const location = remainingSeats[index];
+
+    if (!location) return;
+
+    state.groups[location.tableIndex][location.seatIndex] = student;
+  });
+
+  renderChart();
+  persist();
+
+  setStatus(
+    `${studentCount} students shuffled into ` +
+    `${occupiedTableCount} occupied table(s). ` +
+    `Group sizes: ${tableSizes.join(", ")}.`
+  );
 }
 
 /*
