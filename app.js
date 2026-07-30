@@ -166,16 +166,114 @@ function shuffleSeats() {
     state.students.filter(student => !student.needsFront)
   );
 
-  state.groups = Array.from(
-    { length: tableCount },
-    () => Array(4).fill(null)
-  );
-
   /*
-   * Tables are rendered from front to back.
-   * The first row of tables is therefore:
-   * Table 0 through Table columns - 1.
-   */
+ * Determine how many tables are needed.
+ * Each occupied table should contain either 3 or 4 students.
+ */
+const occupiedTableCount = Math.ceil(state.students.length / 4);
+
+if (
+  state.students.length < 3 ||
+  state.students.length === 5
+) {
+  setStatus(
+    "This roster size cannot be divided into tables of at least three students."
+  );
+  return;
+}
+
+/*
+ * Begin with four students at every occupied table.
+ * Any necessary groups of three are placed at the back of the room.
+ *
+ * Example:
+ * 14 students → [4, 4, 3, 3]
+ * 15 students → [4, 4, 4, 3]
+ * 16 students → [4, 4, 4, 4]
+ */
+const tableSizes = Array(occupiedTableCount).fill(4);
+let seatsToRemove = occupiedTableCount * 4 - state.students.length;
+
+for (
+  let tableIndex = occupiedTableCount - 1;
+  tableIndex >= 0 && seatsToRemove > 0;
+  tableIndex--
+) {
+  tableSizes[tableIndex] = 3;
+  seatsToRemove--;
+}
+
+/*
+ * Create every classroom table.
+ * Tables beyond occupiedTableCount remain completely empty.
+ */
+state.groups = Array.from(
+  { length: tableCount },
+  () => Array(4).fill(null)
+);
+
+/*
+ * Build the available seat locations for occupied tables only.
+ */
+const availableSeats = [];
+
+tableSizes.forEach((tableSize, tableIndex) => {
+  const seatIndexes = shuffle([0, 1, 2, 3]).slice(0, tableSize);
+
+  seatIndexes.forEach(seatIndex => {
+    availableSeats.push({
+      tableIndex,
+      seatIndex
+    });
+  });
+});
+
+/*
+ * Front-priority students may use any available seat
+ * in the first row of occupied tables.
+ */
+const frontRowSeats = shuffle(
+  availableSeats.filter(location =>
+    location.tableIndex < columns
+  )
+);
+
+if (frontStudents.length > frontRowSeats.length) {
+  setStatus(
+    `There are ${frontStudents.length} front-seat students, but only ` +
+    `${frontRowSeats.length} occupied seats in the front row.`
+  );
+  return;
+}
+
+/*
+ * Assign front-priority students first.
+ */
+frontStudents.forEach((student, index) => {
+  const location = frontRowSeats[index];
+
+  state.groups[location.tableIndex][location.seatIndex] = student;
+});
+
+/*
+ * Remove seats already assigned to front-priority students.
+ */
+const remainingSeats = shuffle(
+  availableSeats.filter(location =>
+    !state.groups[location.tableIndex][location.seatIndex]
+  )
+);
+
+/*
+ * Assign all remaining students.
+ */
+otherStudents.forEach((student, index) => {
+  const location = remainingSeats[index];
+
+  if (!location) return;
+
+  state.groups[location.tableIndex][location.seatIndex] = student;
+});
 const frontTableIndexes = shuffle(
   Array.from({ length: columns }, (_, index) => index)
 );
