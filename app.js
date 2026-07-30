@@ -505,6 +505,22 @@ function renderChart() {
         seat.draggable = true;
         seat.dataset.tableIndex = i;
         seat.dataset.seatIndex = seatIndex;
+      
+        seat.addEventListener("dragstart", (event) => {
+          event.dataTransfer.setData(
+            "text/plain",
+            JSON.stringify({
+              tableIndex: i,
+              seatIndex: seatIndex
+            })
+          );
+      
+          seat.classList.add("dragging");
+        });
+      
+        seat.addEventListener("dragend", () => {
+          seat.classList.remove("dragging");
+        });
       }
       
       const suitLabel =
