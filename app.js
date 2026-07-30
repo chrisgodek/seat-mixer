@@ -35,6 +35,22 @@ function loadLocalState() {
   }
 }
 
+function clearRoster() {
+  if (!confirm("Clear the current roster?")) return;
+
+  state.students = [];
+  state.groups = [];
+  state.preferences = {};
+
+  el("roster").value = "";
+  el("studentOptions").innerHTML = "";
+  el("slidesExport").value = "";
+
+  renderChart();
+  persist();
+
+  setStatus("Roster cleared.");
+}
 function persist() {
   const settings = {
     rows: Number(el("rows").value),
@@ -369,7 +385,8 @@ function bindEvents() {
   el("printBtn").addEventListener("click", () => window.print());
   el("saveBtn").addEventListener("click", saveChart);
   el("resetBtn").addEventListener("click", resetLocalData);
-
+  el("clearRosterBtn").addEventListener("click", clearRoster);
+  
   el("selectSlidesBtn").addEventListener("click", () => {
     el("slidesExport").focus();
     el("slidesExport").select();
