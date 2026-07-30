@@ -308,18 +308,49 @@ footer {
 }
 
 @media print {
-  body { background: white; }
-  .site-header, .controls, .status, footer { display: none !important; }
-  .app-layout { display: block; padding: 0; }
-  .chart { border: 0; padding: 0; }
-  .chart.slides-mode { aspect-ratio: auto; }
-  .table-group, .front-banner {
+  body {
+    background: white;
+  }
+
+  .site-header,
+  .controls,
+  .status,
+  footer {
+    display: none !important;
+  }
+
+  .app-layout {
+    display: block;
+    padding: 0;
+  }
+
+  .chart {
+    border: 0;
+    padding: 0;
+  }
+
+  .chart.slides-mode {
+    aspect-ratio: auto;
+  }
+
+  .table-group,
+  .front-banner {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+  }
 
-   .front-priority {
-        outline: none;
-        box-shadow: none;
-    }
+  .front-priority {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .front-priority .student-name {
+    font-weight: 700 !important;
+  }
+}
+
+.front-priority {
+  outline: 3px solid #2b6cb0;
+}
   }
 }
