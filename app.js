@@ -530,17 +530,13 @@ seat.addEventListener("dragend", () => {
 
       seat.addEventListener("dragover", (event) => {
 //
-        seat.addEventListener("dragover", event => {
-          event.preventDefault();
-        });
-        
-        seat.addEventListener("dragenter", event => {
-          event.preventDefault();
-          seat.classList.add("drag-over");
-        });
-        
-        seat.addEventListener("dragleave", () => {
-          seat.classList.remove("drag-over");
+      seat.addEventListener("dragover", event => {
+  event.preventDefault();
+  seat.classList.add("drag-over");
+});
+
+seat.addEventListener("dragleave", () => {
+  seat.classList.remove("drag-over");
 });
           });//
                   
