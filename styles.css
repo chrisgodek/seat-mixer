@@ -217,16 +217,22 @@ textarea { resize: vertical; }
 }
 
 .seat {
-  min-height: 72px;
+  min-height: 96px;
   display: grid;
   align-content: center;
   justify-items: center;
   gap: .15rem;
-  padding: .4rem;
+  padding: .65rem;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: white;
   text-align: center;
+  position: relative;
+}
+.seat::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
 }
 .seat[draggable="true"] {
   cursor: grab;
