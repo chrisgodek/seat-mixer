@@ -137,7 +137,10 @@ function shuffle(items) {
 }
 
 function shuffleSeats() {
-  if (!state.students.length) loadRoster(false);
+  if (!state.students.length) {
+    loadRoster(false);
+  }
+
   if (!state.students.length) {
     setStatus("Paste and load at least one student first.");
     return;
@@ -149,26 +152,90 @@ function shuffleSeats() {
   const capacity = tableCount * 4;
 
   if (state.students.length > capacity) {
-    setStatus(`This room holds ${capacity} students. Add more table groups.`);
+    setStatus(
+      `This room holds ${capacity} students. Add more table groups.`
+    );
     return;
   }
 
-  const front = shuffle(state.students.filter(student => student.needsFront));
-  const others = shuffle(state.students.filter(student => !student.needsFront));
-  const ordered = [...front, ...others];
+  const frontStudents = shuffle(
+    state.students.filter(student => student.needsFront)
+  );
 
-  state.groups = Array.from({ length: tableCount }, () => []);
-  let cursor = 0;
+  const otherStudents = shuffle(
+    state.students.filter(student => !student.needsFront)
+  );
 
-  // Fill front tables first so priority students remain toward the whiteboard.
-  ordered.forEach(student => {
-    while (state.groups[cursor].length >= 4) cursor += 1;
-    state.groups[cursor].push(student);
+  state.groups = Array.from(
+    { length: tableCount },
+    () => Array(4).fill(null)
+  );
+
+  /*
+   * Tables are rendered from front to back.
+   * The first row of tables is therefore:
+   * Table 0 through Table columns - 1.
+   */
+  const frontSeatLocations = [];
+
+  for (let tableIndex = 0; tableIndex < columns; tableIndex++) {
+    for (let seatIndex = 0; seatIndex < 4; seatIndex++) {
+      frontSeatLocations.push({
+        tableIndex,
+        seatIndex
+      });
+    }
+  }
+
+  const shuffledFrontSeats = shuffle(frontSeatLocations);
+
+  /*
+   * Assign front-priority students randomly among the front-row seats.
+   */
+  frontStudents.forEach((student, index) => {
+    const location = shuffledFrontSeats[index];
+
+    if (!location) return;
+
+    state.groups[location.tableIndex][location.seatIndex] = student;
+  });
+
+  /*
+   * Build a list of every remaining empty seat in the classroom.
+   */
+  const remainingSeatLocations = [];
+
+  state.groups.forEach((group, tableIndex) => {
+    group.forEach((student, seatIndex) => {
+      if (!student) {
+        remainingSeatLocations.push({
+          tableIndex,
+          seatIndex
+        });
+      }
+    });
+  });
+
+  const shuffledRemainingSeats = shuffle(remainingSeatLocations);
+
+  /*
+   * Randomly place all other students into the remaining seats.
+   */
+  otherStudents.forEach((student, index) => {
+    const location = shuffledRemainingSeats[index];
+
+    if (!location) return;
+
+    state.groups[location.tableIndex][location.seatIndex] = student;
   });
 
   renderChart();
   persist();
-  setStatus(`${state.students.length} students shuffled into ${state.groups.filter(group => group.length).length} table groups.`);
+
+  setStatus(
+    `${state.students.length} students shuffled. ` +
+    `${frontStudents.length} front-seat student(s) were randomized in the front row.`
+  );
 }
 
 function getTableName(index) {
