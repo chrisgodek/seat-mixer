@@ -245,9 +245,9 @@ textarea { resize: vertical; }
                 background-color 0.15s ease;
 }
 .seat.drag-over {
-  outline: 3px dashed #2563eb;
-  outline-offset: -3px;
-  background: rgba(37, 99, 235, 0.12);
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0,0,0,.2);
+    border: 2px solid #2563eb;
 }
 .suit,
 .student-name {
