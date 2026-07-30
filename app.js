@@ -521,24 +521,30 @@ function renderChart() {
 seat.addEventListener("dragend", () => {
   draggedSeat = null;
   seat.classList.remove("dragging");
-});
+
         document
   .querySelectorAll(".drag-over")
   .forEach(s => s.classList.remove("drag-over"));
       }
+});
 
       seat.addEventListener("dragover", (event) => {
 //
-        seat.addEventListener("dragenter", event => {
-  event.preventDefault();
-  seat.classList.add("drag-over");
-});
-
-seat.addEventListener("dragleave", () => {
-  seat.classList.remove("drag-over");
-});//
+        seat.addEventListener("dragover", event => {
+          event.preventDefault();
+        });
         
-  event.preventDefault();
+        seat.addEventListener("dragenter", event => {
+          event.preventDefault();
+          seat.classList.add("drag-over");
+        });
+        
+        seat.addEventListener("dragleave", () => {
+          seat.classList.remove("drag-over");
+});
+          });//
+                  
+            event.preventDefault();
 });
 //move seats
 seat.addEventListener("drop", event => {
