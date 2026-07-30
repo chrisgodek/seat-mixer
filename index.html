@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A privacy-friendly classroom seating chart generator.">
+  <title>Seat Mixer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <h1>Seat Mixer</h1>
+      <p>Create, save, print, and reshuffle classroom seating charts.</p>
+    </div>
+    <button id="printBtn" class="button secondary" type="button">Print chart</button>
+  </header>
+
+  <main class="app-layout">
+    <aside class="controls" aria-label="Seat Mixer controls">
+      <section class="panel">
+        <h2>Classroom</h2>
+        <div class="two-col">
+          <label>Rows
+            <input id="rows" type="number" min="1" max="8" value="3">
+          </label>
+          <label>Columns
+            <input id="columns" type="number" min="1" max="8" value="3">
+          </label>
+        </div>
+
+        <label>Table names
+          <select id="tableNaming">
+            <option value="numbers">Numbers</option>
+            <option value="letters">Letters</option>
+            <option value="colors">Colors</option>
+          </select>
+        </label>
+
+        <label>Roster — one student per line
+          <textarea id="roster" rows="10" placeholder="Alex Johnson&#10;Brenda Lee&#10;Carlos Ramirez"></textarea>
+        </label>
+
+        <div class="button-row">
+          <button id="loadRosterBtn" class="button secondary" type="button">Load roster</button>
+          <button id="shuffleBtn" class="button primary" type="button">Shuffle seats</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Front-seat priority</h2>
+        <p class="help">These selections are remembered on this browser.</p>
+        <div id="studentOptions" class="student-options"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Appearance</h2>
+        <label>Theme
+          <select id="theme">
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="purple">Purple</option>
+            <option value="orange">Orange</option>
+            <option value="rainbow">Table colors</option>
+            <option value="grayscale">Black and white</option>
+          </select>
+        </label>
+
+        <label>Chart title
+          <input id="chartTitle" type="text" value="Seating Chart">
+        </label>
+
+        <label class="check-row">
+          <input id="slidesMode" type="checkbox">
+          <span>Google Slides 16:9 preview</span>
+        </label>
+      </section>
+
+      <section class="panel">
+        <h2>Saved charts</h2>
+        <label>Description
+          <input id="saveDescription" type="text" placeholder="Period 3">
+        </label>
+        <button id="saveBtn" class="button secondary full" type="button">Save current chart</button>
+        <div id="savedCharts" class="saved-charts"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Google Slides</h2>
+        <p class="help">Copy the tab-separated layout and paste it into Slides.</p>
+        <textarea id="slidesExport" rows="8" readonly></textarea>
+        <button id="selectSlidesBtn" class="button secondary full" type="button">Select Slides text</button>
+      </section>
+
+      <button id="resetBtn" class="button danger full" type="button">Reset local data</button>
+    </aside>
+
+    <section class="workspace">
+      <div id="status" class="status" role="status" aria-live="polite">Paste a roster to begin.</div>
+
+      <section id="chart" class="chart" data-theme="blue">
+        <div class="chart-heading">
+          <h2 id="displayTitle">Seating Chart</h2>
+          <span id="displayDate"></span>
+        </div>
+
+        <div class="front-banner">WHITEBOARD / FRONT OF CLASSROOM</div>
+        <div id="room" class="room"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    Student names and saved charts remain in this browser. Seat Mixer does not send them to a server.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+SEAT MIXER — GITHUB PAGES DEPLOYMENT
+
+Upload these files to the ROOT of your GitHub repository:
+
+1. index.html
+2. styles.css
+3. app.js
+4. README.md
+5. DEPLOY.txt (optional; instructions only)
+
+GitHub setup:
+Settings > Pages > Deploy from a branch > main > /(root) > Save
+
+Your site address will be:
+https://YOUR-USERNAME.github.io/seat-mixer/
+
+IMPORTANT: index.html must appear at the top level of the repository,
+not inside another folder.
