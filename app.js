@@ -36,20 +36,25 @@ function loadLocalState() {
 }
 
 function clearRoster() {
-  if (!confirm("Clear the current roster?")) return;
+  const confirmed = window.confirm(
+    "Clear the current roster and seating assignments?"
+  );
+
+  if (!confirmed) return;
 
   state.students = [];
   state.groups = [];
-  state.preferences = {};
 
   el("roster").value = "";
-  el("studentOptions").innerHTML = "";
   el("slidesExport").value = "";
 
+  renderStudentOptions();
   renderChart();
   persist();
 
-  setStatus("Roster cleared.");
+  setStatus(
+    "Current roster cleared. Saved charts and front-seat preferences were kept."
+  );
 }
 function persist() {
   const settings = {
