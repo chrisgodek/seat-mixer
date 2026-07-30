@@ -23,6 +23,8 @@ const state = {
   savedCharts: []
 };
 
+let draggedSeat = null;
+
 const el = id => document.getElementById(id);
 
 /* --------------------------------------------------
@@ -506,48 +508,65 @@ function renderChart() {
         seat.dataset.tableIndex = i;
         seat.dataset.seatIndex = seatIndex;
       
-        seat.addEventListener("dragstart", (event) => {
-          event.dataTransfer.setData(
-            "text/plain",
-            JSON.stringify({
-              tableIndex: i,
-              seatIndex: seatIndex
-            })
-          );
-      
-          seat.classList.add("dragging");
-        });
-      
-        seat.addEventListener("dragend", () => {
-          seat.classList.remove("dragging");
-        });
+       seat.addEventListener("dragstart", event => {
+  draggedSeat = {
+    tableIndex: i,
+    seatIndex
+  };
+
+  event.dataTransfer.effectAllowed = "move";
+  seat.classList.add("dragging");
+});
+
+seat.addEventListener("dragend", () => {
+  draggedSeat = null;
+  seat.classList.remove("dragging");
+});
       }
 
       seat.addEventListener("dragover", (event) => {
   event.preventDefault();
 });
 //move seats
-seat.addEventListener("drop", (event) => {
+seat.addEventListener("drop", event => {
   event.preventDefault();
 
-  const source = JSON.parse(
-    event.dataTransfer.getData("text/plain")
-  );
+  if (!draggedSeat) {
+    return;
+  }
+
+  const sourceTableIndex =
+    draggedSeat.tableIndex;
+
+  const sourceSeatIndex =
+    draggedSeat.seatIndex;
+
+  // Do nothing when dropped onto the original seat.
+  if (
+    sourceTableIndex === i &&
+    sourceSeatIndex === seatIndex
+  ) {
+    return;
+  }
 
   const sourceStudent =
-    state.groups[source.tableIndex][source.seatIndex];
+    state.groups[sourceTableIndex][sourceSeatIndex];
 
   const targetStudent =
     state.groups[i][seatIndex];
 
-  state.groups[source.tableIndex][source.seatIndex] =
+  state.groups[sourceTableIndex][sourceSeatIndex] =
     targetStudent;
 
   state.groups[i][seatIndex] =
     sourceStudent;
 
+  draggedSeat = null;
+
   renderChart();
   persist();
+
+  setStatus("Students moved.");
 }); //safsd
       
       const suitLabel =
