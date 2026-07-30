@@ -228,7 +228,14 @@ textarea { resize: vertical; }
   background: white;
   text-align: center;
 }
-
+.seat[draggable="true"] {
+  cursor: grab;
+  user-select: none;
+}
+/* Drag and drop */
+.seat[draggable="true"]:active {
+  cursor: grabbing;
+}
 .suit {
   font-size: .78rem;
   font-weight: 800;
