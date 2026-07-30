@@ -239,6 +239,13 @@ textarea { resize: vertical; }
 .seat.dragging {
   opacity: 0.4;
 }
+
+.seat.drag-over {
+    outline: 3px dashed #2563eb;
+    outline-offset: -3px;
+    background: rgba(37,99,235,.12);
+}
+
 .suit {
   font-size: .78rem;
   font-weight: 800;
