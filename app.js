@@ -176,18 +176,26 @@ function shuffleSeats() {
    * The first row of tables is therefore:
    * Table 0 through Table columns - 1.
    */
-  const frontSeatLocations = [];
+const frontTableIndexes = shuffle(
+  Array.from({ length: columns }, (_, index) => index)
+);
 
-  for (let tableIndex = 0; tableIndex < columns; tableIndex++) {
-    for (let seatIndex = 0; seatIndex < 4; seatIndex++) {
-      frontSeatLocations.push({
-        tableIndex,
-        seatIndex
-      });
-    }
-  }
+const seatIndexes = shuffle([0, 1, 2, 3]);
 
-  const shuffledFrontSeats = shuffle(frontSeatLocations);
+const shuffledFrontSeats = [];
+
+/*
+ * Build the seat order so each front table gets one
+ * student before any table gets a second.
+ */
+seatIndexes.forEach(seatIndex => {
+  frontTableIndexes.forEach(tableIndex => {
+    shuffledFrontSeats.push({
+      tableIndex,
+      seatIndex
+    });
+  });
+});
 
   /*
    * Assign front-priority students randomly among the front-row seats.
