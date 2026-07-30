@@ -522,6 +522,33 @@ function renderChart() {
           seat.classList.remove("dragging");
         });
       }
+
+      seat.addEventListener("dragover", (event) => {
+  event.preventDefault();
+});
+//move seats
+seat.addEventListener("drop", (event) => {
+  event.preventDefault();
+
+  const source = JSON.parse(
+    event.dataTransfer.getData("text/plain")
+  );
+
+  const sourceStudent =
+    state.groups[source.tableIndex][source.seatIndex];
+
+  const targetStudent =
+    state.groups[i][seatIndex];
+
+  state.groups[source.tableIndex][source.seatIndex] =
+    targetStudent;
+
+  state.groups[i][seatIndex] =
+    sourceStudent;
+
+  renderChart();
+  persist();
+}); //safsd
       
       const suitLabel =
         document.createElement("div");
