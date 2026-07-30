@@ -316,5 +316,10 @@ footer {
   .table-group, .front-banner {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+
+   .front-priority {
+        outline: none;
+        box-shadow: none;
+    }
   }
 }
