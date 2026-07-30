@@ -244,7 +244,8 @@ textarea { resize: vertical; }
 }
 
 .front-priority {
-  box-shadow: inset 0 0 0 2px var(--accent);
+    box-shadow: none !important;
+    border: 1px solid var(--border) !important;
 }
 
 .front-note {
