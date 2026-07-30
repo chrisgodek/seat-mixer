@@ -241,9 +241,9 @@ textarea { resize: vertical; }
 }
 
 .seat.drag-over {
-    outline: 3px dashed #2563eb;
-    outline-offset: -3px;
-    background: rgba(37,99,235,.12);
+  outline: 3px dashed #2563eb;
+  outline-offset: -3px;
+  background: rgba(37, 99, 235, 0.12);
 }
 
 .suit {
