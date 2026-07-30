@@ -1,8 +1,8 @@
 const SUITS = [
   { key: "clubs", symbol: "♣", label: "Clubs", color: "black" },
-  { key: "spades", symbol: "♠", label: "Spades", color: "black" },
+  { key: "hearts", symbol: "♥", label: "Hearts", color: "red" },
   { key: "diamonds", symbol: "♦", label: "Diamonds", color: "red" },
-  { key: "hearts", symbol: "♥", label: "Hearts", color: "red" }
+  { key: "spades", symbol: "♠", label: "Spades", color: "black" }
 ];
 
 const TABLE_COLORS = ["Blue", "Green", "Yellow", "Red", "Purple", "Orange", "Teal", "Silver"];
