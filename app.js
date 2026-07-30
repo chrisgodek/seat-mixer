@@ -201,12 +201,12 @@ function renderChart() {
 
       seat.append(suitLabel, studentName);
 
-      if (student?.needsFront) {
-        const note = document.createElement("div");
-        note.className = "front-note";
-        note.textContent = "FRONT PRIORITY";
-        seat.appendChild(note);
-      }
+      //if (student?.needsFront) {
+        //const note = document.createElement("div");
+        //note.className = "front-note";
+        //note.textContent = "FRONT PRIORITY";
+        //seat.appendChild(note);
+      //}
 
       suitGrid.appendChild(seat);
     });
