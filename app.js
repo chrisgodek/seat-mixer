@@ -181,7 +181,7 @@ function renderChart() {
 
     const tableLabel = document.createElement("div");
     tableLabel.className = "table-label";
-    tableLabel.innerHTML = `<span>${escapeHtml(getTableName(i))}</span><span>${group.length}/4</span>`;
+    tableLabel.innerHTML = `<span>${escapeHtml(getTableName(i))}</span>`;
 
     const suitGrid = document.createElement("div");
     suitGrid.className = "suit-grid";
