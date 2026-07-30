@@ -338,9 +338,12 @@ seatIndexes.forEach(seatIndex => {
   renderChart();
   persist();
 
+  const groupSummary = tableSizes.join(", ");
+
   setStatus(
-    `${state.students.length} students shuffled. ` +
-    `${frontStudents.length} front-seat student(s) were randomized in the front row.`
+    `${state.students.length} students shuffled into ` +
+    `${occupiedTableCount} occupied table(s). ` +
+    `Group sizes: ${groupSummary}.`
   );
 }
 
