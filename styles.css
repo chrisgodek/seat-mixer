@@ -229,14 +229,7 @@ textarea { resize: vertical; }
   text-align: center;
   position: relative;
 }
-.seat::after {
-  content: "";
-  position: absolute;
-  inset: -6px;
-}
-.suit-grid {
-  gap: .25rem;
-}
+
 .seat[draggable="true"] {
   cursor: grab;
   user-select: none;
