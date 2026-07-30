@@ -234,6 +234,9 @@ textarea { resize: vertical; }
   position: absolute;
   inset: -6px;
 }
+.suit-grid {
+  gap: .25rem;
+}
 .seat[draggable="true"] {
   cursor: grab;
   user-select: none;
