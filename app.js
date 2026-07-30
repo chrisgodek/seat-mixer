@@ -501,7 +501,12 @@ function renderChart() {
             ? " front-priority"
             : ""
         }`;
-
+      if (student) {
+        seat.draggable = true;
+        seat.dataset.tableIndex = i;
+        seat.dataset.seatIndex = seatIndex;
+      }
+      
       const suitLabel =
         document.createElement("div");
 
